@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket
+from app.websocket import handle_websocket
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.room_manager import RoomManager
-from app.schemas import CreateRoomRequest, JoinRoomRequest
+from app.schemas import JoinRoomRequest
 
 app = FastAPI()
 app.add_middleware(
@@ -16,9 +17,9 @@ app.add_middleware(
 room_manager = RoomManager()
 
 @app.post("/rooms")
-def create_room(request: CreateRoomRequest):
+def create_room():
     """Create a new room with optional capabilities."""
-    room_code = room_manager.create_room(request.capabilities)
+    room_code = room_manager.create_room()
     return {"room_code": room_code}
 
 @app.post("/rooms/{room_code}/join")

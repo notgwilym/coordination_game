@@ -3,13 +3,14 @@ class RoomManager:
         # In-memory store for rooms. Replace with a database for production.
         self.rooms: dict[str, dict] = {}
 
-    def create_room(self, capabilities: list[str]) -> str:
+    def create_room(self) -> str:
         """Create a room and return its room_code."""
         room_code = self._generate_room_code()
         self.rooms[room_code] = {
-            "capabilities": capabilities,
             "participants": {},  # Dictionary of participant_name -> metadata
         }
+        # log the current rooms in the server
+        print(self.rooms)
         return room_code
 
     def join_room(self, room_code: str, participant_name: str) -> bool:
