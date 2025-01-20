@@ -29,3 +29,8 @@ def join_room(room_code: str, request: JoinRoomRequest):
     if not success:
         raise HTTPException(status_code=400, detail="Room not found or name conflict")
     return {"message": f"Joined room {room_code} as {request.participant_name}"}
+
+@app.websocket("/ws/{room_code}/{participant_name}")
+async def websocket_endpoint(websocket: WebSocket, room_code: str, participant_name: str):
+    """Handle WebSocket connections."""
+    await handle_websocket(room_manager, websocket, room_code, participant_name)

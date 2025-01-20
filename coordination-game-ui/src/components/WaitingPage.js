@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { usePlayerContext } from "./PlayerContext";
+import { getWebSocket } from "../services/player_socket";
 
 function WaitingPage() {
   const { roomCode } = useParams(); // Extract room code from the URL
@@ -8,7 +9,28 @@ function WaitingPage() {
 
   const [players, setPlayers] = useState([]);
 
-  const socket = getWebSocket(roomCode, playerName);
+  useEffect(() => {
+    // Set up the WebSocket connection
+    const socket = getWebSocket(roomCode, playerName);
+
+    // Handle incoming WebSocket messages
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+
+      if (message.type === "player_update") {
+        setPlayers(message.data.players); // Update player list
+      } else if (message.type === "error") {
+        console.error("Error from server:", message.data);
+      } else {
+        console.warn("Unknown message type:", message.type);
+      }
+    };
+
+    // Clean up the WebSocket connection on component unmount
+    return () => {
+      socket.close();
+    };
+  }, [roomCode, playerName]);
 
   return (
     <div>
