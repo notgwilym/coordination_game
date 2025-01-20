@@ -1,8 +1,18 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.room_manager import RoomManager
 from app.schemas import CreateRoomRequest, JoinRoomRequest
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allow requests from the React frontend
+    allow_credentials=True,  # Allow cookies (if needed for auth)
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers (e.g., Content-Type, Authorization)
+)
+
 room_manager = RoomManager()
 
 @app.post("/rooms")
