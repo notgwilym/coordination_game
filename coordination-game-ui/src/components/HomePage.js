@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePlayerContext } from "./PlayerContext";
 
 function HomePage() {
   const [roomCode, setRoomCode] = useState("");
   const [participantName, setParticipantName] = useState("");
+
+  
+  const { setPlayerName } = usePlayerContext();
   const navigate = useNavigate();
 
   const handleJoinRoom = async () => {
@@ -20,6 +24,7 @@ function HomePage() {
       });
 
       if (response.ok) {
+        setPlayerName(participantName);
         navigate(`/waiting/${roomCode}`);
       } else {
         const error = await response.json();

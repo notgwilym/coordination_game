@@ -1,11 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './App.css';
-import App from './components/App'; // Adjust the import path if needed
+import React from "react";
+import ReactDOM from "react-dom";
+import App from './components/App';
+import { PlayerProvider } from "./components/PlayerContext";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <PlayerProvider>
+      <App />
+    </PlayerProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
